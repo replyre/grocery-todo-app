@@ -2,7 +2,7 @@ import logo from "./logo.svg";
 import "./App.css";
 import { FaEdit } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
-import { useReducer, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { SiTicktick } from "react-icons/si";
 
 function reducer(state, action) {
@@ -53,8 +53,12 @@ function reducer(state, action) {
 }
 
 function App() {
-  const [tasks, dispatch] = useReducer(reducer, []);
+  const initialValue = JSON.parse(localStorage.getItem("tasks")) || [];
+  const [tasks, dispatch] = useReducer(reducer, initialValue);
   const [task, settask] = useState("");
+  useEffect(() => {
+    if (tasks.length > 0) localStorage.setItem("tasks", JSON.stringify(tasks));
+  }, [tasks]);
   function addTask(text) {
     dispatch({
       type: "add",
